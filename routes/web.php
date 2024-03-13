@@ -16,3 +16,30 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/login', function () {
+    return view('auth.login'); 
+})->name('login'); 
+
+Route::get('/register', function () {
+    return view('auth.register'); 
+})->name('register'); 
+
+Route::get('/admin', function () {
+    return view('auth.admin'); 
+})->name('admin'); 
+Route::get('/domain', function () {
+    return view('domain'); 
+})->name('domain'); 
+
+Route::get('/transactions', function () {
+    return view('CRUD.Transactions.index'); 
+})->name('transactions'); 
+
+Route::get('/buckets', function () {
+    return view('CRUD.Buckets.index'); 
+})->name('buckets'); 
+
+Route::get('/charts', function () {
+    return view('Charts.index'); 
+})->name('charts');
