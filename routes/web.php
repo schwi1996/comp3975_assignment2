@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\BucketsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TransactionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,28 +20,36 @@ Route::get('/', function () {
 });
 
 Route::get('/login', function () {
-    return view('auth.login'); 
-})->name('login'); 
+    return view('auth.login');
+})->name('login');
 
 Route::get('/register', function () {
-    return view('auth.register'); 
-})->name('register'); 
+    return view('auth.register');
+})->name('register');
 
 Route::get('/admin', function () {
-    return view('auth.admin'); 
-})->name('admin'); 
+    return view('auth.admin');
+})->name('admin');
 Route::get('/domain', function () {
-    return view('domain'); 
-})->name('domain'); 
+    return view('domain');
+})->name('domain');
 
-Route::get('/transactions', function () {
-    return view('CRUD.Transactions.index'); 
-})->name('transactions'); 
+// Route::get('/transactions', function () {
+//     return view('CRUD.Transactions.index');
+// })->name('transactions.index');
 
-Route::get('/buckets', function () {
-    return view('CRUD.Buckets.index'); 
-})->name('buckets'); 
+// Route::get('/buckets', function () {
+//     return view('CRUD.Buckets.index');
+// })->name('buckets');
 
 Route::get('/charts', function () {
-    return view('Charts.index'); 
+    return view('Charts.index');
 })->name('charts');
+
+Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
+Route::get('/transactions/create', [TransactionsController::class, 'create'])->name('transactions.create');
+Route::post('/transactions/create', [TransactionsController::class, 'store']);
+
+Route::get('/buckets', [BucketsController::class, 'index'])->name('buckets.index');
+Route::get('/buckets/create', [BucketsController::class, 'create'])->name('buckets.create');
+Route::post('/buckets/create', [BucketsController::class, 'store']);
