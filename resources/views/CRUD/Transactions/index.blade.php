@@ -5,14 +5,18 @@
 @section('content')
 <div class="container">
     {{-- <button class="btn btn-primary mb-3" onclick="location.href='{{ route('transactions.create') }}'">Create Transaction</button> --}}
-        <button class="btn btn-primary mb-3" onclick="location.href='#'">Create Transaction</button> {{-- Adjust route as necessary --}}
-
+        <button class="btn btn-primary mb-3" onclick="location.href='{{ route('transactions.create') }}'">Create Transaction</button> {{-- Adjust route as necessary --}}
+    @if (session() -> has('success'))
+        <div class="bg-green-500 text-black px-4 py-2">
+            {{ session('success') }}
+        </div>
+    @endif
     <table class="table table-bordered">
         <thead class="thead-light">
             <tr>
                 <th>ID</th>
                 <th>Date</th>
-                <th>Vender</th>
+                <th>Vendor</th>
                 <th>Expense</th>
                 <th>Deposit</th>
                 <th>Budget</th>
