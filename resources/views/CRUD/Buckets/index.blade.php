@@ -7,7 +7,12 @@
     {{-- @can('create', App\Models\Bucket::class)
         <button onclick="window.location='{{ route('buckets.create') }}'">Create Bucket</button>
     @endcan --}}
-
+    <button class="btn btn-primary mb-3" onclick="location.href='{{ route('buckets.create') }}'">Create Bucket</button>
+    @if (session() -> has('success'))
+        <div class="bg-green-500 text-black px-4 py-2">
+            {{ session('success') }}
+        </div>
+    @endif
     <table class="table">
         <thead>
             <tr>
