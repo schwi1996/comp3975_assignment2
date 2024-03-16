@@ -41,16 +41,23 @@ class BucketsController extends Controller
     }
 
     public function getCategoryByVendor($vendor) {
-    // Find the first bucket that matches the vendor
-    $bucket = Buckets::whereRaw('LOWER(vendor) LIKE LOWER(?)', [$vendor])->first();
+        // Convert the transaction's vendor to lowercase
+        $vendor = strtolower($vendor);
 
-    // If a bucket was found, return its category
-    if ($bucket) {
-        return $bucket->category;
-    }
+        // Find all buckets
+        $buckets = Buckets::all();
 
-    // If no bucket was found, return 'Miscellaneous'
-    return 'Miscellaneous';
+        // Iterate over each bucket
+        foreach ($buckets as $bucket) {
+            // If the bucket's vendor is a substring of the transaction's vendor
+            if (strpos($vendor, strtolower($bucket->vendor)) !== false) {
+                // Return the bucket's category
+                return $bucket->category;
+            }
+        }
+
+        // If no bucket was found, return 'Miscellaneous'
+        return 'Miscellaneous';
     }
 
 }
