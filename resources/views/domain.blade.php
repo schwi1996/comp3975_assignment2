@@ -2,6 +2,14 @@
 
 @section('title', 'domain')
 
+@push('styles')
+<style>
+    .container {
+        background-color: #f8f9fa;
+    }
+</style>
+@endpush
+
 @section('content')
 <div class="container mt-4">
     {{-- Display flash messages from session --}}
@@ -33,14 +41,14 @@
     <div class="row mt-4">
         <div class="col-md-6">
             <h3>Upload Transactions File</h3>
-            {{-- <form action="{{ route('transactions.upload') }}" method="POST" enctype="multipart/form-data"> --}}
-                @csrf
-                <div class="form-group">
-                    <label for="transactionFile">Transaction CSV File:</label>
-                    <input type="file" class="form-control-file" id="transactionFile" name="transactionFile" required>
-                </div>
-                <button type="submit" class="btn btn-success">Upload</button>
-            </form>
+        <form action="{{ route('transactions.upload') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="form-group">
+                <label for="transactionFile">Transaction CSV File:</label>
+                <input type="file" class="form-control-file" id="transactionFile" name="transactionFile" required>
+            </div>
+            <button type="submit" class="btn btn-success">Upload</button>
+        </form>
         </div>
     </div>
 </div>

@@ -23,10 +23,10 @@
             </tr>
         </thead>
         <tbody>
-            {{-- @foreach($buckets as $bucket)
+            @foreach($buckets as $bucket)
                 <tr>
-                    <td>{{ $bucket->bucket_id }}</td>
-                    <td>{{ $bucket->transaction_name }}</td>
+                    <td>{{ $bucket->id }}</td>
+                    <td>{{ $bucket->vendor }}</td>
                     <td>{{ $bucket->category }}</td>
                     <td>
                         @can('update', $bucket)
@@ -41,7 +41,7 @@
                         @endcan
                     </td>
                 </tr>
-            @endforeach --}}
+            @endforeach
         </tbody>
     </table>
 

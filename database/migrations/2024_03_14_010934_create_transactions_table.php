@@ -19,7 +19,7 @@ return new class extends Migration
             $table->decimal('spend', 8, 2)->default(0);
             $table->decimal('deposit', 8, 2)->default(0);
             $table->decimal('balance', 8, 2)->nullable();
-            $table->text('category');
+            $table->string('category')->nullable();
         });
     }
 

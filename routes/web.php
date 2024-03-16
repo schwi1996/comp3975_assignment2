@@ -3,6 +3,7 @@
 use App\Http\Controllers\BucketsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionsController;
+use App\Http\Controllers\ExpenseReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,3 +54,9 @@ Route::post('/transactions/create', [TransactionsController::class, 'store']);
 Route::get('/buckets', [BucketsController::class, 'index'])->name('buckets.index');
 Route::get('/buckets/create', [BucketsController::class, 'create'])->name('buckets.create');
 Route::post('/buckets/create', [BucketsController::class, 'store']);
+
+Route::get('/charts', [ExpenseReportController::class, 'index'])->name('charts.index');
+Route::post('/transactions/upload', [TransactionsController::class, 'upload'])->name('transactions.upload');
+
+
+
