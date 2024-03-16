@@ -24,28 +24,27 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody>
-            {{-- @foreach($transactions as $transaction)
-            <tr>
-                <td>{{ $transaction->transaction_id }}</td>
-                <td>{{ $transaction->transaction_date }}</td>
-                <td>{{ $transaction->name }}</td>
-                <td>{{ $transaction->expense }}</td>
-                <td>{{ $transaction->income }}</td>
-                <td>{{ $transaction->overall_balance }}</td>
-                <td>{{ $transaction->category ?? 'Other' }}</td>
-                <td>
-                    <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-sm btn-info mr-1">Update</a> {{-- Adjust route as necessary --}}
-                     {{-- <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" style="display: inline-block;"> --}}
-                    <form action="" method="POST" style="display: inline-block;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {{-- @endforeach --}}
-        </tbody>
+       <tbody>
+    @foreach($transactions as $transaction)
+    <tr>
+        <td>{{ $transaction->id }}</td>
+        <td>{{ $transaction->date }}</td>
+        <td>{{ $transaction->vendor }}</td> 
+        <td>{{ $transaction->spend }}</td>
+        <td>{{ $transaction->deposit }}</td> 
+        <td>{{ $transaction->balance }}</td> 
+        <td>{{ $transaction->category }}</td>
+        <td>
+            {{-- <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-sm btn-info mr-1">Update</a>
+            <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" style="display: inline-block;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form> --}}
+        </td>
+    </tr>
+    @endforeach
+</tbody>
     </table>
     <button class="btn btn-secondary" onclick="location.href='{{ url('/domain') }}'">Back</button>
 </div>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\BucketsController;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\TransactionsImport;
 
 
 use Illuminate\Http\Request;
@@ -51,6 +53,17 @@ class TransactionsController extends Controller
             session()->flash('error', 'Transaction creation failed');
             return redirect()->route('transactions.create');
         }
-}
+    }
+
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'transactionFile' => 'required|file|mimes:xls,xlsx,csv',
+        ]);
+
+        Excel::import(new TransactionsImport, request()->file('transactionFile'));
+
+        return back()->with('success', 'Transactions imported successfully!');
+    }
 
 }
