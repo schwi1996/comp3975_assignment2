@@ -6,7 +6,7 @@
 <div class="container">
     <h2>Create New Bucket</h2>
     @if (session() -> has('error'))
-        <div class="bg-red-500 text-black px-4 py-2">
+        <div class="alert alert-danger">
             {{ session('error') }}
         </div>
     @endif

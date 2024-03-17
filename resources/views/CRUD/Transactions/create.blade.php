@@ -6,7 +6,7 @@
 <div class="container">
     <h2>Create New Transaction</h2>
     @if (session() -> has('error'))
-        <div class="bg-red-500 text-black px-4 py-2">
+        <div class="alert alert-danger">
             {{ session('error') }}
         </div>
     @endif
@@ -34,7 +34,6 @@
             <input type="text" class="form-control" id="balance" name="balance">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
-        {{-- <button class="btn btn-secondary" onclick="location.href='{{ route('transactions.index') }}'">Cancel</button> --}}
         <a href="{{ route('transactions.index') }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>

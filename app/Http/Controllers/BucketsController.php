@@ -92,4 +92,17 @@ class BucketsController extends Controller
     return redirect()->route('buckets.index');
 }
 
+public function destroy($id) {
+    // Find the bucket by ID
+    $bucket = Buckets::findOrFail($id);
+    
+    // Delete the bucket
+    $bucket->delete();
+
+    TransactionsController::recategorizeAll();
+    
+    // Redirect back with success message
+    return redirect()->route('buckets.index')->with('success', 'Bucket deleted successfully!');
+}
+
 }

@@ -19,7 +19,7 @@
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-
+    <div style="margin-bottom: 20px;"></div>
     @isset($expenseSummary)
         <table class="table">
             <thead>
