@@ -11,6 +11,11 @@
             {{ session('success') }}
         </div>
     @endif
+    @if (session() -> has('error'))
+        <div class="bg-red-500 text-black px-4 py-2">
+            {{ session('error') }}
+        </div>
+    @endif
     <table class="table table-bordered">
         <thead class="thead-light">
             <tr>
@@ -21,7 +26,7 @@
                 <th>Deposit</th>
                 <th>Budget</th>
                 <th>Category</th>
-                <th></th>
+                <th>Actions</th>
             </tr>
         </thead>
        <tbody>
@@ -35,8 +40,8 @@
         <td>{{ $transaction->balance }}</td> 
         <td>{{ $transaction->category }}</td>
         <td>
-            {{-- <a href="{{ route('transactions.edit', $transaction->id) }}" class="btn btn-sm btn-info mr-1">Update</a>
-            <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" style="display: inline-block;">
+            <button class="btn btn-primary mb-3" onclick="location.href='{{ route('transactions.edit', $transaction->id) }}'">Update</button>
+            {{-- <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" style="display: inline-block;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="btn btn-sm btn-danger">Delete</button>
