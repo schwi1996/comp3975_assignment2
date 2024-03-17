@@ -4,6 +4,7 @@ use App\Http\Controllers\BucketsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransactionsController;
 use App\Http\Controllers\ExpenseReportController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,9 @@ Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 
-Route::get('/admin', function () {
-    return view('auth.admin');
-})->name('admin');
+
+Route::get('/admin', [UserController::class, 'adminDashboard'])->name('admin');
+
 Route::get('/domain', function () {
     return view('domain');
 })->name('domain');
@@ -62,8 +63,20 @@ Route::get('/buckets/edit/{id}', [BucketsController::class, 'edit'])->name('buck
 Route::put('/buckets/{id}', [BucketsController::class, 'update'])->name('buckets.update');
 Route::delete('/buckets/{id}', [BucketsController::class, 'destroy'])->name('buckets.destroy');
 
+
 Route::get('/charts', [ExpenseReportController::class, 'index'])->name('charts.index');
 Route::post('/transactions/upload', [TransactionsController::class, 'upload'])->name('transactions.upload');
+
+Route::post('/login', [UserController::class, 'authenticate'])->name('login');
+Route::post('/register', [UserController::class, 'register'])->name('register');
+
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    // Route to handle the approval of a user
+    Route::post('/admin/approve', [UserController::class, 'approveUser'])->middleware('auth', 'is_admin')->name('admin.approve');
+});
+
+
+
 
 
 
