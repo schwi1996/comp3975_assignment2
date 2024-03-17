@@ -66,4 +66,60 @@ class TransactionsController extends Controller
         return back()->with('success', 'Transactions imported successfully!');
     }
 
+    public function edit($id)
+{
+    // Fetch the transaction from the database
+    $transaction = Transactions::findOrFail($id);
+
+    // Pass the transaction data to the view along with the ID
+    return view('CRUD.transactions.edit', compact('transaction'));
+}
+
+public function update(Request $request, $id)
+{
+    // Validate the incoming request data
+    $validation = $request->validate([
+        'date' => 'required|date',
+        'vendor' => 'required|string|max:255',
+        'spend' => 'required|numeric|between:0,999999.99',
+        'deposit' => 'required|numeric|between:0,999999.99',
+        'balance' => 'nullable|numeric|between:0,999999.99',
+    ]);
+
+    $category = BucketsController::getCategoryByVendor($validation['vendor']);
+
+    try {
+        // Find the transaction by its ID
+        $transaction = Transactions::findOrFail($id);
+
+        // Update the transaction with the validated data
+        $transaction->update(array_merge($validation, ['category' => $category]));
+
+        // Redirect the user back to the transaction index page with a success message
+        return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully!');
+    } catch (\Exception $e) {
+        // Handle any exceptions
+        return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update transaction. Please try again later.']);
+    }
+}
+
+    public static function recategorizeAll() {
+
+        // Retrieve all transactions
+        $transactions = Transactions::all();
+
+        // Iterate over each transaction
+        foreach ($transactions as $transaction) {
+            // Get the category for the transaction's vendor
+            $category = BucketsController::getCategoryByVendor($transaction->vendor);
+
+            // Update the transaction's category
+            $transaction->category = $category;
+
+            // Save the transaction
+            $transaction->save();
+        }
+    }
+
+
 }
