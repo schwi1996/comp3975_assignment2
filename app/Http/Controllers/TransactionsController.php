@@ -11,11 +11,9 @@ use App\Models\Transactions;
 use Illuminate\Support\Facades\Validator;
 
 
-class TransactionsController extends Controller
-{
+class TransactionsController extends Controller {
 
-    public function index()
-    {
+    public function index() {
         // Retrieve transactions from the database
         $transactions = Transactions::all();
 
@@ -23,9 +21,7 @@ class TransactionsController extends Controller
         return view('CRUD.Transactions.index', ['transactions' => $transactions]);
     }
 
-    public function create()
-    {
-        // You can customize this view name and path as per your project structure
+    public function create() {
         return view('CRUD.Transactions.create');
     }
 
@@ -55,8 +51,7 @@ class TransactionsController extends Controller
         }
     }
 
-    public function upload(Request $request)
-    {
+    public function upload(Request $request) {
         $request->validate([
             'transactionFile' => 'required|file|mimes:xls,xlsx,csv',
         ]);
@@ -66,42 +61,40 @@ class TransactionsController extends Controller
         return back()->with('success', 'Transactions imported successfully!');
     }
 
-    public function edit($id)
-{
-    // Fetch the transaction from the database
-    $transaction = Transactions::findOrFail($id);
-
-    // Pass the transaction data to the view along with the ID
-    return view('CRUD.transactions.edit', compact('transaction'));
-}
-
-public function update(Request $request, $id)
-{
-    // Validate the incoming request data
-    $validation = $request->validate([
-        'date' => 'required|date',
-        'vendor' => 'required|string|max:255',
-        'spend' => 'required|numeric|between:0,999999.99',
-        'deposit' => 'required|numeric|between:0,999999.99',
-        'balance' => 'nullable|numeric|between:0,999999.99',
-    ]);
-
-    $category = BucketsController::getCategoryByVendor($validation['vendor']);
-
-    try {
-        // Find the transaction by its ID
+    public function edit($id) {
+        // Fetch the transaction from the database
         $transaction = Transactions::findOrFail($id);
 
-        // Update the transaction with the validated data
-        $transaction->update(array_merge($validation, ['category' => $category]));
-
-        // Redirect the user back to the transaction index page with a success message
-        return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully!');
-    } catch (\Exception $e) {
-        // Handle any exceptions
-        return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update transaction. Please try again later.']);
+        // Pass the transaction data to the view along with the ID
+        return view('CRUD.transactions.edit', compact('transaction'));
     }
-}
+
+    public function update(Request $request, $id) {
+        // Validate the incoming request data
+        $validation = $request->validate([
+            'date' => 'required|date',
+            'vendor' => 'required|string|max:255',
+            'spend' => 'required|numeric|between:0,999999.99',
+            'deposit' => 'required|numeric|between:0,999999.99',
+            'balance' => 'nullable|numeric|between:0,999999.99',
+        ]);
+
+        $category = BucketsController::getCategoryByVendor($validation['vendor']);
+
+        try {
+            // Find the transaction by its ID
+            $transaction = Transactions::findOrFail($id);
+
+            // Update the transaction with the validated data
+            $transaction->update(array_merge($validation, ['category' => $category]));
+
+            // Redirect the user back to the transaction index page with a success message
+            return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully!');
+        } catch (\Exception $e) {
+            // Handle any exceptions
+            return redirect()->back()->withInput()->withErrors(['error' => 'Failed to update transaction. Please try again later.']);
+        }
+    }
 
     public static function recategorizeAll() {
 
@@ -121,5 +114,15 @@ public function update(Request $request, $id)
         }
     }
 
+    public function destroy($id) {
+        // Find the transaction by ID
+        $transaction = Transactions::findOrFail($id);
+        
+        // Delete the transaction
+        $transaction->delete();
+        
+        // Redirect back with success message
+        return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully!');
+    }
 
 }

@@ -7,22 +7,23 @@
     
     <button class="btn btn-primary mb-3" onclick="location.href='{{ route('buckets.create') }}'">Create Bucket</button>
     @if (session() -> has('success'))
-        <div class="bg-green-500 text-black px-4 py-2">
+        <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
     @if (session() -> has('error'))
-        <div class="bg-red-500 text-black px-4 py-2">
+        <div class="alert alert-danger">
             {{ session('error') }}
         </div>
     @endif
-    <table class="table">
-        <thead>
+    <div style="margin-bottom: 20px;"></div>
+    <table class="table table-bordered">
+        <thead class="thead-light">
             <tr>
-                <th>Bucket ID</th>
+                <th style="width: 4%;">ID</th>
                 <th>Transaction Name</th>
                 <th>Category</th>
-                <th>Actions</th>
+                <th style="width: 14%;">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -32,23 +33,19 @@
                     <td>{{ $bucket->vendor }}</td>
                     <td>{{ $bucket->category }}</td>
                     <td>
-                        {{-- @can('update', $bucket)
-                            <button onclick="location.href='{{ route('buckets.edit', $bucket->bucket_id) }}'">Update</button>
-                        @endcan --}}
                         <button class="btn btn-primary mb-3" onclick="location.href='{{ route('buckets.edit', $bucket->id) }}'">Update</button>
-                        @can('delete', $bucket)
-                            <form action="{{ route('buckets.destroy', $bucket->bucket_id) }}" method="POST" onsubmit="return confirm('Are you sure?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit">Delete</button>
-                            </form>
-                        @endcan
+                        <form action="{{ route('buckets.destroy', $bucket->id) }}" method="POST" style="display: inline-block;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger mb-3" onclick="return confirm('Are you sure you want to delete this bucket?')">Delete</button>
+                        </form>
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
 
-    <button onclick="location.href='{{ url('/domain') }}'">Back</button>
+    <button class="btn btn-secondary" onclick="location.href='{{ url('/domain') }}'">Back</button>
+    <div style="margin-bottom: 20px;"></div>
 </div>
 @endsection

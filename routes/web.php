@@ -52,6 +52,7 @@ Route::get('/transactions/create', [TransactionsController::class, 'create'])->n
 Route::post('/transactions/create', [TransactionsController::class, 'store']);
 Route::get('/transactions/edit/{id}', [TransactionsController::class, 'edit'])->name('transactions.edit');
 Route::put('/transactions/{id}', [TransactionsController::class, 'update'])->name('transactions.update');
+Route::delete('/transactions/{id}', [TransactionsController::class, 'destroy'])->name('transactions.destroy');
 
 
 Route::get('/buckets', [BucketsController::class, 'index'])->name('buckets.index');
@@ -59,6 +60,7 @@ Route::get('/buckets/create', [BucketsController::class, 'create'])->name('bucke
 Route::post('/buckets/create', [BucketsController::class, 'store']);
 Route::get('/buckets/edit/{id}', [BucketsController::class, 'edit'])->name('buckets.edit');
 Route::put('/buckets/{id}', [BucketsController::class, 'update'])->name('buckets.update');
+Route::delete('/buckets/{id}', [BucketsController::class, 'destroy'])->name('buckets.destroy');
 
 Route::get('/charts', [ExpenseReportController::class, 'index'])->name('charts.index');
 Route::post('/transactions/upload', [TransactionsController::class, 'upload'])->name('transactions.upload');
