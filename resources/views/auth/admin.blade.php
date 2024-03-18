@@ -15,21 +15,21 @@
             </tr>
         </thead>
         <tbody>
-            {{-- @foreach ($unapprovedUsers as $user)
+            @foreach ($unapprovedUsers as $user)
                 <tr>
-                    <td>{{ $user->user_id }}</td>
+                    <td>{{ $user->id }}</td> <!-- Adjust based on your User model -->
                     <td>{{ $user->email }}</td>
                     <td>
                         <form method="post" action="{{ route('admin.approve') }}">
                             @csrf
-                            <input type="hidden" name="approve_user_id" value="{{ $user->user_id }}">
+                            <input type="hidden" name="approve_user_id" value="{{ $user->id }}">
                             <button type="submit" class="btn btn-primary">Approve</button>
                         </form>
                     </td>
                 </tr>
-            @endforeach --}}
+            @endforeach
         </tbody>
     </table>
-    <button class="btn btn-secondary" onclick="window.location='{{ url('/') }}'">Back</button>
+    <button class="btn btn-secondary" onclick="window.location='{{ url('/domain') }}'">Back</button>
 </div>
 @endsection
