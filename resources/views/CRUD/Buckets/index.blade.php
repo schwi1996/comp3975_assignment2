@@ -4,8 +4,9 @@
 
 @section('content')
 <div class="container">
-    
-    <button class="btn btn-primary mb-3" onclick="location.href='{{ route('buckets.create') }}'">Create Bucket</button>
+    @if(Auth::user()->is_admin)
+        <button class="btn btn-primary mb-3" onclick="location.href='{{ route('buckets.create') }}'">Create Bucket</button>
+    @endif
     @if (session() -> has('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -33,12 +34,14 @@
                     <td>{{ $bucket->vendor }}</td>
                     <td>{{ $bucket->category }}</td>
                     <td>
-                        <button class="btn btn-primary mb-3" onclick="location.href='{{ route('buckets.edit', $bucket->id) }}'">Update</button>
-                        <form action="{{ route('buckets.destroy', $bucket->id) }}" method="POST" style="display: inline-block;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger mb-3" onclick="return confirm('Are you sure you want to delete this bucket?')">Delete</button>
-                        </form>
+                        @if(Auth::user()->is_admin) <!-- Check if the user is an admin -->
+                            <button class="btn btn-primary mb-3" onclick="location.href='{{ route('buckets.edit', $bucket->id) }}'">Update</button>
+                            <form action="{{ route('buckets.destroy', $bucket->id) }}" method="POST" style="display: inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger mb-3" onclick="return confirm('Are you sure you want to delete this bucket?')">Delete</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

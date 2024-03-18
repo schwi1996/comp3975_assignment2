@@ -36,36 +36,33 @@ Route::get('/domain', function () {
     return view('domain');
 })->name('domain');
 
-// Route::get('/transactions', function () {
-//     return view('CRUD.Transactions.index');
-// })->name('transactions.index');
-
-// Route::get('/buckets', function () {
-//     return view('CRUD.Buckets.index');
-// })->name('buckets');
 
 Route::get('/charts', function () {
     return view('Charts.index');
 })->name('charts');
 
-Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
-Route::get('/transactions/create', [TransactionsController::class, 'create'])->name('transactions.create');
-Route::post('/transactions/create', [TransactionsController::class, 'store']);
-Route::get('/transactions/edit/{id}', [TransactionsController::class, 'edit'])->name('transactions.edit');
-Route::put('/transactions/{id}', [TransactionsController::class, 'update'])->name('transactions.update');
-Route::delete('/transactions/{id}', [TransactionsController::class, 'destroy'])->name('transactions.destroy');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/domain', function () {
+        return view('domain');
+    })->name('domain');
 
+    Route::get('/transactions', [TransactionsController::class, 'index'])->name('transactions.index');
+    Route::get('/transactions/create', [TransactionsController::class, 'create'])->name('transactions.create');
+    Route::post('/transactions/create', [TransactionsController::class, 'store']);
+    Route::get('/transactions/edit/{id}', [TransactionsController::class, 'edit'])->name('transactions.edit');
+    Route::put('/transactions/{id}', [TransactionsController::class, 'update'])->name('transactions.update');
+    Route::delete('/transactions/{id}', [TransactionsController::class, 'destroy'])->name('transactions.destroy');
 
-Route::get('/buckets', [BucketsController::class, 'index'])->name('buckets.index');
-Route::get('/buckets/create', [BucketsController::class, 'create'])->name('buckets.create');
-Route::post('/buckets/create', [BucketsController::class, 'store']);
-Route::get('/buckets/edit/{id}', [BucketsController::class, 'edit'])->name('buckets.edit');
-Route::put('/buckets/{id}', [BucketsController::class, 'update'])->name('buckets.update');
-Route::delete('/buckets/{id}', [BucketsController::class, 'destroy'])->name('buckets.destroy');
+    Route::get('/buckets', [BucketsController::class, 'index'])->name('buckets.index');
+    Route::get('/buckets/create', [BucketsController::class, 'create'])->name('buckets.create');
+    Route::post('/buckets/create', [BucketsController::class, 'store']);
+    Route::get('/buckets/edit/{id}', [BucketsController::class, 'edit'])->name('buckets.edit');
+    Route::put('/buckets/{id}', [BucketsController::class, 'update'])->name('buckets.update');
+    Route::delete('/buckets/{id}', [BucketsController::class, 'destroy'])->name('buckets.destroy');
 
-
-Route::get('/charts', [ExpenseReportController::class, 'index'])->name('charts.index');
-Route::post('/transactions/upload', [TransactionsController::class, 'upload'])->name('transactions.upload');
+    Route::get('/charts', [ExpenseReportController::class, 'index'])->name('charts.index');
+    Route::post('/transactions/upload', [TransactionsController::class, 'upload'])->name('transactions.upload');
+});
 
 Route::post('/login', [UserController::class, 'authenticate'])->name('login');
 Route::post('/register', [UserController::class, 'register'])->name('register');
@@ -74,6 +71,11 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     // Route to handle the approval of a user
     Route::post('/admin/approve', [UserController::class, 'approveUser'])->middleware('auth', 'is_admin')->name('admin.approve');
 });
+
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
+
+
 
 
 
