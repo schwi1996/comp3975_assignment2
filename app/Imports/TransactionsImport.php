@@ -48,7 +48,7 @@ class TransactionsImport implements ToModel, WithStartRow
         return new Transactions([
             'date' => $formattedDate,
             'vendor' => $row[1],
-            'spending' => (float) $row[2], // Ensure this is cast to a float if it's a monetary value
+            'spend' => (float) $row[2], // Ensure this is cast to a float if it's a monetary value
             'deposit' => (float) $row[3], // Ensure this is cast to a float if it's a monetary value
             'balance' => (float) $row[4], // Ensure this is cast to a float if it's a monetary value
             'category' =>  $category
