@@ -37,10 +37,6 @@
         <label for="deposit">Deposit:</label>
         <input type="text" class="form-control" id="deposit" name="deposit" value="{{ $transaction->deposit }}">
     </div>
-    <div class="form-group">
-        <label for="balance">Balance:</label>
-        <input type="text" class="form-control" id="balance" name="balance" value="{{ $transaction->balance }}">
-    </div>
     <button type="submit" class="btn btn-primary">Submit</button>
     <a href="{{ route('transactions.index') }}" class="btn btn-secondary">Cancel</a>
 </form>

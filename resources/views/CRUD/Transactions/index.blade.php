@@ -35,9 +35,9 @@
         <td>{{ $transaction->id }}</td>
         <td>{{ $transaction->date }}</td>
         <td>{{ $transaction->vendor }}</td> 
-        <td>{{ $transaction->spend }}</td>
-        <td>{{ $transaction->deposit }}</td> 
-        <td>{{ $transaction->balance }}</td> 
+        <td>{{ number_format($transaction->spend, 2) }}</td>
+        <td>{{ number_format($transaction->deposit, 2) }}</td> 
+        <td>{{ number_format($transaction->balance, 2) }}</td> 
         <td>{{ $transaction->category }}</td>
         <td>
             <button class="btn btn-primary mb-3" onclick="location.href='{{ route('transactions.edit', $transaction->id) }}'">Update</button>

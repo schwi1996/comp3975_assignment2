@@ -15,7 +15,7 @@ class TransactionsController extends Controller {
 
     public function index() {
         // Retrieve transactions from the database
-        $transactions = Transactions::all();
+        $transactions = Transactions::orderBy('date', 'asc')->get();
 
         // Pass transactions data to the view and render the transactions index page
         return view('CRUD.Transactions.index', ['transactions' => $transactions]);
@@ -32,16 +32,14 @@ class TransactionsController extends Controller {
             'vendor' => 'required|string|max:255',
             'spend' => 'required|numeric|min:0',
             'deposit' => 'required|numeric|min:0',
-            'balance' => 'nullable|numeric|min:0',
         ]);
         $validation['spend'] = floatval($validation['spend']);
         $validation['deposit'] = floatval($validation['deposit']);
-        if (isset($validation['balance'])) {
-            $validation['balance'] = floatval($validation['balance']);
-        }
+        $balance = 0;
         $bucketsController = new BucketsController();
         $category = $bucketsController->getCategoryByVendor($validation['vendor']);
-        $data = Transactions::create(array_merge($validation, ['category' => $category]));
+        $data = Transactions::create(array_merge($validation, ['category' => $category, 'balance' => $balance]));
+        TransactionsController::recalculateBalance();
         if ($data) {
             session()->flash('success', 'Transaction created successfully');
             return redirect()->route('transactions.index');
@@ -57,6 +55,8 @@ class TransactionsController extends Controller {
         ]);
 
         Excel::import(new TransactionsImport, request()->file('transactionFile'));
+
+        TransactionsController::recalculateBalance();
 
         return back()->with('success', 'Transactions imported successfully!');
     }
@@ -74,9 +74,8 @@ class TransactionsController extends Controller {
         $validation = $request->validate([
             'date' => 'required|date',
             'vendor' => 'required|string|max:255',
-            'spend' => 'required|numeric|between:0,999999.99',
-            'deposit' => 'required|numeric|between:0,999999.99',
-            'balance' => 'nullable|numeric|between:0,999999.99',
+            'spend' => 'required|numeric|min:0',
+            'deposit' => 'required|numeric|min:0',
         ]);
 
         $category = BucketsController::getCategoryByVendor($validation['vendor']);
@@ -88,6 +87,8 @@ class TransactionsController extends Controller {
             // Update the transaction with the validated data
             $transaction->update(array_merge($validation, ['category' => $category]));
 
+            TransactionsController::recalculateBalance();
+            
             // Redirect the user back to the transaction index page with a success message
             return redirect()->route('transactions.index')->with('success', 'Transaction updated successfully!');
         } catch (\Exception $e) {
@@ -120,9 +121,21 @@ class TransactionsController extends Controller {
         
         // Delete the transaction
         $transaction->delete();
+
+        TransactionsController::recalculateBalance();
         
         // Redirect back with success message
         return redirect()->route('transactions.index')->with('success', 'Transaction deleted successfully!');
+    }
+
+    public static function recalculateBalance() {
+        $transactions = Transactions::orderBy('date', 'asc')->get();
+        $balance = 6000;
+        foreach ($transactions as $transaction) {
+            $balance = $balance - $transaction->spend + $transaction->deposit;
+            $transaction->balance = $balance;
+            $transaction->save();
+        }
     }
 
 }
