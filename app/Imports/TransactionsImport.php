@@ -7,6 +7,7 @@ use App\Models\Buckets;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
+use DateTime;
 
 class TransactionsImport implements ToModel, WithStartRow
 {   
@@ -24,13 +25,14 @@ class TransactionsImport implements ToModel, WithStartRow
      */
     public function startRow(): int
     {
-        return 2; // Start reading the data from the second row.
+        return 1; // Start reading the data from the second row.
     }
 
     public function model(array $row)
     {
         // Create a DateTime object from the date string
-        $date = \DateTime::createFromFormat('d/m/Y', $row[0]);
+        $date = DateTime::createFromFormat('m/d/Y', $row[0]);
+
         // Format the date for storage (the database likely expects 'Y-m-d')
         $formattedDate = $date ? $date->format('Y-m-d') : null;
 
@@ -46,11 +48,11 @@ class TransactionsImport implements ToModel, WithStartRow
         $category = $category ?? "Miscellaneous";
 
         return new Transactions([
-            'date' => $formattedDate,
+            'date' => $formattedDate, // Use the formatted date here
             'vendor' => $row[1],
-            'spend' => (float) $row[2], // Ensure this is cast to a float if it's a monetary value
-            'deposit' => (float) $row[3], // Ensure this is cast to a float if it's a monetary value
-            'balance' => (float) $row[4], // Ensure this is cast to a float if it's a monetary value
+            'spend' => isset($row[2]) ? (float) $row[2] : 0, // If 'spend' is null, set it to 0
+            'deposit' => isset($row[3]) ? (float) $row[3] : 0, // If 'deposit' is null, set it to 0
+            'balance' => isset($row[4]) ? (float) $row[4] : 0, // Ensure this is cast to a float if it's a monetary value
             'category' =>  $category
         ]);
     }
