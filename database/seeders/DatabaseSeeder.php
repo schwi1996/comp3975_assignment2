@@ -11,5 +11,7 @@ class DatabaseSeeder extends Seeder
     {
         // Add this line
         $this->call(AdminUserSeeder::class);
+        $this->call(BalanceSeeder::class);
+        $this->call(BucketSeeder::class);
     }
 }
