@@ -5,6 +5,7 @@ use App\Http\Controllers\BucketsController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\TransactionsImport;
 use App\Models\StartBalance;
+// use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Models\Transactions;
 use Illuminate\Support\Facades\Validator;
@@ -48,12 +49,27 @@ class TransactionsController extends Controller {
         }
     }
 
-    public function upload(Request $request) {
-        $request->validate([
-            'transactionFile' => 'required|file|mimes:xls,xlsx,csv',
-        ]);
 
-        Excel::import(new TransactionsImport, request()->file('transactionFile'));
+    public function upload(Request $request) {
+        // Get the file from the request
+        $file = $request->file('transactionFile');
+
+        // Define the new path for the file
+        $destinationPath = public_path('/imported');
+
+        // Check if the directory exists, if not create it
+        if (!File::exists($destinationPath)) {
+            File::makeDirectory($destinationPath, $mode = 0777, true, true);
+        }
+
+        // Get the original file name
+        $originalFileName = $file->getClientOriginalName(). '.' . $file->getClientOriginalExtension() . '.imported';
+
+        // Move the file to the new location
+        $file->move($destinationPath, $originalFileName);
+
+        // Import the data from the file
+        Excel::import(new TransactionsImport, $destinationPath . '/' . $originalFileName);
 
         TransactionsController::recalculateBalance();
 
