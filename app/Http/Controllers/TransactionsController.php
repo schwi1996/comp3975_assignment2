@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\BucketsController;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\TransactionsImport;
-
-
+use App\Models\StartBalance;
 use Illuminate\Http\Request;
 use App\Models\Transactions;
 use Illuminate\Support\Facades\Validator;
@@ -130,7 +129,7 @@ class TransactionsController extends Controller {
 
     public static function recalculateBalance() {
         $transactions = Transactions::orderBy('date', 'asc')->get();
-        $balance = 6000;
+        $balance = StartBalance::first()->balance;
         foreach ($transactions as $transaction) {
             $balance = $balance - $transaction->spend + $transaction->deposit;
             $transaction->balance = $balance;
