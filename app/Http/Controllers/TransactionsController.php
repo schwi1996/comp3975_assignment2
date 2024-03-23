@@ -9,16 +9,17 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use App\Models\Transactions;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 
 class TransactionsController extends Controller {
 
     public function index() {
         // Retrieve transactions from the database
-        $transactions = Transactions::orderBy('date', 'asc')->get();
+        $transactions = Transactions::orderBy('date', 'asc')->paginate(10);
 
         // Pass transactions data to the view and render the transactions index page
-        return view('CRUD.Transactions.index', ['transactions' => $transactions]);
+        return view('CRUD.Transactions.index', ['transactions' => $transactions])->with(request()->input('page'));
     }
 
     public function create() {
@@ -51,27 +52,44 @@ class TransactionsController extends Controller {
 
 
     public function upload(Request $request) {
+        // Validate the file presence
+        $request->validate([
+            'transactionFile' => 'required|file|mimes:csv',
+        ]);
+
         // Get the file from the request
         $file = $request->file('transactionFile');
 
         // Define the new path for the file
         $destinationPath = public_path('/imported');
 
-        // Check if the directory exists, if not create it
-        if (!File::exists($destinationPath)) {
-            File::makeDirectory($destinationPath, $mode = 0777, true, true);
+        // Use Laravel's built-in storage methods for directory creation
+        if (!File::isDirectory($destinationPath)) {
+            File::makeDirectory($destinationPath, 0777, true, true);
         }
 
-        // Get the original file name
-        $originalFileName = $file->getClientOriginalName(). '.' . $file->getClientOriginalExtension() . '.imported';
+        // Simplify file name handling and add uniqueness
+        $fileName = $file->getClientOriginalName() . '.imported';
 
         // Move the file to the new location
-        $file->move($destinationPath, $originalFileName);
+        $file->move($destinationPath, $fileName);
 
         // Import the data from the file
-        Excel::import(new TransactionsImport, $destinationPath . '/' . $originalFileName);
+        try {
+            Excel::import(new TransactionsImport, $destinationPath . '/' . $fileName);
+        } catch (\Exception $e) {
+            // Log error or handle it as per your requirement
+            Log::error('File import failed: ' . $e->getMessage());
+            return back()->withErrors('File import failed. Please try again.');
+        }
 
-        TransactionsController::recalculateBalance();
+        // Recalculate balance after import
+        try {
+            $this->recalculateBalance();
+        } catch (\Exception $e) {
+            Log::error('Recalculate balance failed: ' . $e->getMessage());
+            return back()->withErrors('Recalculate balance failed. Please contact support.');
+        }
 
         return back()->with('success', 'Transactions imported successfully!');
     }

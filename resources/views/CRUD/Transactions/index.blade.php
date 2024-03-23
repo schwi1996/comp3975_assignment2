@@ -4,7 +4,12 @@
 
 @section('content')
 <div class="container">
-    <button class="btn btn-primary mb-3" onclick="location.href='{{ route('transactions.create') }}'">Create Transaction</button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-primary" onclick="location.href='{{ route('transactions.create') }}'">Create Transaction</button>
+        <div>
+            {{ $transactions->links() }}
+        </div>
+    </div>    
     @if (session() -> has('success'))
         <div class="alert alert-success">
             {{ session('success') }}
@@ -24,7 +29,7 @@
                 <th>Vendor</th>
                 <th>Expense</th>
                 <th>Deposit</th>
-                <th>Budget</th>
+                <th>Balance</th>
                 <th>Category</th>
                 <th style="width: 14%;">Actions</th>
             </tr>

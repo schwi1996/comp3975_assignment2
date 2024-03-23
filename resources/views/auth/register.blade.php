@@ -9,6 +9,13 @@
             <h2 class="text-center">Register</h2>
 
             {{-- Display Errors --}}
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            {{-- Display Errors --}}
             @if($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -44,6 +51,9 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary btn-block">Register</button>
+                 <div class="mt-3">
+                <a href="{{ url('/') }}" class="btn btn-secondary btn-block">Back</a>
+            </div>
             </form>
         </div>
     </div>
