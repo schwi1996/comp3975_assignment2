@@ -13,27 +13,22 @@
 @section('content')
 <div class="container mt-4">
     {{-- Display flash messages from session --}}
-    {{-- @if(session('messages'))
+     @if (session() -> has('success'))
         <div class="alert alert-success">
-            @foreach(session('messages') as $message)
-                <p>{{ $message }}</p>
+            {{ session('success') }}
+        </div>
+    @endif
+   @if ($errors->any())
+        <div class="alert alert-danger">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
             @endforeach
         </div>
-    @endif --}}
-
-    {{-- Example conditional content for admin users --}}
-    {{-- @if(Auth::check() && Auth::user()->is_admin)
-        <div class="mb-3">
-            <a href="{{ route('admin.dashboard') }}" class="btn btn-primary">Admin Dashboard</a>
-        </div>
-    @endif --}}
+    @endif
 
     <div class="row">
         <div class="col-md-12">
-            {{-- <h2>Welcome, {{ Auth::user()->name }}!</h2> --}}
-            <p>This is your main dashboard.</p>
-
-            {{-- Additional user-specific content here --}}
+            <h2>Welcome, {{ Auth::user()->name }}!</h2>
         </div>
     </div>
 

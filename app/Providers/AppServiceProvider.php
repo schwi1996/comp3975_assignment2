@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Database\Events\MigrationsEnded;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,7 +44,7 @@ class AppServiceProvider extends ServiceProvider
        
     // }); 
         $sqlitePath = database_path('database.sqlite');
-
+        Paginator::useBootstrap();
         // Check if the SQLite database file exists
         if (!File::exists($sqlitePath)) {
             // If it doesn't exist, create it

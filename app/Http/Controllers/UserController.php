@@ -64,7 +64,7 @@ class UserController extends Controller
 
         if ($user) {
             // Do NOT log the user in. Instead, inform them that their account is pending approval
-            return redirect()->route('login')->with('success', 'Registration successful. Your account is pending approval by an administrator.');
+            return back()->with('success', 'Registration successful. Your account is pending approval by an administrator.');
         }
 
         // Handle the error if the user wasn't created
